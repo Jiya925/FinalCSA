@@ -19,7 +19,6 @@ public class Runner {
 		    Scanner scanner = new Scanner(file);
 		    
 		    
-		    
 		} catch (FileNotFoundException e) {
 		    System.err.println(e.getMessage());
 		}
