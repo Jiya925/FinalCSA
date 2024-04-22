@@ -11,7 +11,8 @@ public class SolverLogic {
         }
     }
 	
-	public int[][] solve(){
+	//backtracking algorithm
+	public int[][] solveSudoku(int grid[][], int row, int col){
 		
 	}
 	
