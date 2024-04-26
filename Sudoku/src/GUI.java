@@ -6,31 +6,66 @@ public class GUI extends JFrame {
     private JTextField[][] sudokuCells;
 
     public GUI() {
+    	//create 800x800 window
         setTitle("Sudoku Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 600);
+        setSize(800, 800);
 
-        JPanel sudokuPanel = new JPanel();
-        sudokuPanel.setLayout(new GridLayout(9, 9));
+        JPanel sudokuPanel = new JPanel(); //panel for 9x9 board
+        sudokuPanel.setLayout(new GridLayout(3, 3)); //layout represents 3x3 subgrids
         sudokuCells = new JTextField[9][9];
 
+        //make each subgrid have 3x3 layout and add border
         for (int i = 0; i < 9; i++) {
+            JPanel subgridPanel = new JPanel(); //panel for each 3x3
+            subgridPanel.setLayout(new GridLayout(3, 3));
+            subgridPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+          //make each spot have user input and add border
             for (int j = 0; j < 9; j++) {
                 JTextField textField = new JTextField(1);
                 textField.setHorizontalAlignment(JTextField.CENTER);
                 sudokuCells[i][j] = textField;
-                sudokuPanel.add(textField);
+                subgridPanel.add(textField);
+                textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             }
+
+            sudokuPanel.add(subgridPanel); //put 3x3 subgrids into 9x9 board
         }
-
-        JPanel buttonPanel = new JPanel();
-        JButton solveButton = new JButton("Solve");
-        JButton clearButton = new JButton("Clear");
-        buttonPanel.add(solveButton);
-        buttonPanel.add(clearButton);
-
+        
+        JPanel topPanel = new JPanel(); //top panel
+        //buttons for top
+        JButton easyLevelButton = new JButton("Easy Level");
+        JButton mediumLevelButton = new JButton("Medium Level");
+        JButton hardLevelButton = new JButton("Hard Level");
+        JButton randomLevelButton = new JButton("Random");
+        
+        //drop down stuff
+        JLabel drop = new JLabel("Pick Theme:");
+        drop.setVisible(true);
+        topPanel.add(drop);
+        String[] choices = { "THEME 1","THEME 2", "THEME 3"};
+        final JComboBox<String> cb = new JComboBox<String>(choices);
+        cb.setVisible(true);
+        topPanel.add(cb);
+        
+        //add each button to top
+        topPanel.add(easyLevelButton);
+        topPanel.add(mediumLevelButton);
+        topPanel.add(hardLevelButton);
+        topPanel.add(randomLevelButton);
+        
+        JPanel bottemPanel = new JPanel(); //bottom panel
+        //buttons for bottom
+        JButton checkButton = new JButton("Check");
+        JButton clearButton = new JButton("Clear Guesses");
+        bottemPanel.add(checkButton);
+        bottemPanel.add(clearButton);
+        
+        //put each panel together
         getContentPane().add(BorderLayout.CENTER, sudokuPanel);
-        getContentPane().add(BorderLayout.SOUTH, buttonPanel);
+        getContentPane().add(BorderLayout.NORTH, topPanel);
+        getContentPane().add(BorderLayout.SOUTH, bottemPanel);
     }
 
     public JTextField[][] getSudokuCells() {
