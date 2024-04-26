@@ -32,7 +32,8 @@ public class Runner {
 		print(b1);
 		print(b5);
 		print(b9);
-		ComputerGenBoard c = new ComputerGenBoard(30);
+		
+		ComputerGenBoard c = new ComputerGenBoard(0);
 		c.fillValues();
 		c.printSudoku();
 
