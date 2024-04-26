@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 
 public class GUI extends JFrame {
@@ -25,6 +26,8 @@ public class GUI extends JFrame {
             for (int j = 0; j < 9; j++) {
                 JTextField textField = new JTextField(1);
                 textField.setHorizontalAlignment(JTextField.CENTER);
+                //set document filter to allow only digits
+                ((AbstractDocument) textField.getDocument()).setDocumentFilter(new IntFilter());
                 sudokuCells[i][j] = textField;
                 subgridPanel.add(textField);
                 textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -70,5 +73,33 @@ public class GUI extends JFrame {
 
     public JTextField[][] getSudokuCells() {
         return sudokuCells;
+    }
+    
+    //filter to only allow ints
+    class IntFilter extends DocumentFilter {
+
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            //if the inserted string is null
+            if(string == null){
+            	return;
+            }
+            //if the inserted string contains only digits (0-9)
+            if(string.matches("\\d")){
+                //call the insertString method of the superclass (DocumentFilter)
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            //if the replacement text is null
+            if (text == null){
+            	return;
+            }
+            //if the replacement text contains only digits (0-9)
+            if (text.matches("\\d")) {
+                //call the replace method of the superclass (DocumentFilter)
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
     }
 }
