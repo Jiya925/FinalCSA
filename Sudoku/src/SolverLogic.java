@@ -20,10 +20,13 @@ public class SolverLogic {
             //place the 3x3 array into the 9x9 grid at the calculated starting position
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    board[rowStart + i][colStart + j] = threeByThree[i][j];
+                	if (rowStart + i < 9 && colStart + j < 9) {
+                        board[rowStart + i][colStart + j] = threeByThree[i][j];
+                    }
                 }
             }
-        } 
+        }
+        solveSudoku(board, 0, 0);
     }
 
     //backtracking algorithm
@@ -31,7 +34,8 @@ public class SolverLogic {
         //check if board has been solved completely
     	if (row == 8 && col == 9)
             return grid;
-
+    	
+    	//go to next row
         if (col == 9) {
             row++;
             col = 0;
@@ -40,7 +44,8 @@ public class SolverLogic {
         //check if there's already a number in that position
         if (grid[row][col] != 0)
             return solveSudoku(grid, row, col + 1);
-
+        
+        //test each num starting from 1 until it works
         for (int num = 1; num <= 9; num++) {
             if (isValid(row, col, num)) {
                 grid[row][col] = num;
