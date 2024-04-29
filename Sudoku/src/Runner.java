@@ -36,6 +36,9 @@ public class Runner {
 		ComputerGenBoard c = new ComputerGenBoard(0);
 		c.fillValues();
 		c.printSudoku();
+		
+		SolverLogic solve = new SolverLogic(fileBoard);
+		solve.printSolution();
 
 	}
 	
