@@ -39,6 +39,8 @@ public class Runner {
 		
 		SolverLogic solve = new SolverLogic(fileBoard);
 		solve.printSolution();
+		
+		
 
 	}
 	
