@@ -3,7 +3,6 @@ import java.util.Map;
 
 public class SolverLogic {
     int[][] board;
-    public int N = 9;
     
     //turn hashmap into a 9x9
     public SolverLogic(HashMap<Integer, int[][]> fileBoard) {
@@ -30,54 +29,41 @@ public class SolverLogic {
             }
         }
         System.out.println("Initial Board:");
-        for (int[] row : board) {
-            for (int num : row) {
-                System.out.print(num + " ");
-            }
-            System.out.println();
-        }
+        printSudoku(board);
 
-        //solve the puzzle
-        solveSudoku();
+        System.out.println("Solving...");
         
-        // Print the initial board
-        printSolution();
-
-        // Solve the puzzle
-        boolean solved = solveSudoku();
-
-        // Print the solved board if the puzzle was solved
-        if (solved) {
-            printSolution();
-        } else {
+        //olve the sudoku
+        if (solveSudoku(board, 0, 0)) {
+            System.out.println("Sudoku solved!");
+        } 
+        else {
             System.out.println("Sudoku puzzle could not be solved.");
         }
+
+        System.out.println("Filled Board:");
+        printSudoku(board);
     }
 
+
+
     //backtracking algorithm
-    public boolean solveSudoku() {
-        return solveSudoku(board, 0, 0);
-    }
-    
-    public boolean solveSudoku(int board[][], int row, int col) {
-        // Check if we have reached the end of the board
-        if (row == N - 1 && col == N) {
+    public boolean solveSudoku(int[][] board, int row, int col) {
+    	//filled board
+        if (row == 9) {
             return true;
         }
 
         //if we have reached the end of a row, move to the next row
-        if (col == N) {
-            row++;
-            col = 0;
+        if (col == 9) {
+            return solveSudoku(board, row + 1, 0);
         }
-
         //if the cell is already filled, move to the next cell
         if (board[row][col] != 0) {
             return solveSudoku(board, row, col + 1);
         }
 
-        //try each number from 1 to 9
-        for (int num = 1; num < 10; num++) {
+        for (int num = 1; num <= 9; num++) {
             if (isValid(board, row, col, num)) {
                 //if the number is valid, place it in the cell
                 board[row][col] = num;
@@ -89,19 +75,21 @@ public class SolverLogic {
                 board[row][col] = 0;
             }
         }
-        //if no number works, backtrack
         return false;
     }
+
+
     
     //print filled board
-    public void printSolution() {
-        for (int r = 0; r < N; r++) {
-            for (int c = 0; c < N; c++) {
-                System.out.print(board[r][c]);
+    private void printSudoku(int[][] board) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.print(board[i][j] + " ");
             }
             System.out.println();
         }
     }
+
     
     public boolean isValid(int[][] board, int row, int col, int num) {
         //check if num is already present in the row/column/subgrid
@@ -111,8 +99,8 @@ public class SolverLogic {
             }
     	}
  
-        for (int x = 0; x <= 8; x++) {
-            if (board[x][col] == num) {
+        for (int y = 0; y <= 8; y++) {
+            if (board[y][col] == num) {
                 return false;
             }
         }
@@ -125,7 +113,6 @@ public class SolverLogic {
                 }
     		}
     	}
- 
         return true;
 	}
 }

@@ -38,7 +38,7 @@ public class Runner {
 		c.printSudoku();
 		
 		SolverLogic solve = new SolverLogic(fileBoard);
-		solve.printSolution();
+
 		
 		
 
