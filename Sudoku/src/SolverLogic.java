@@ -105,7 +105,8 @@ public class SolverLogic {
             }
         }
  
-        int startRow = row - row % 3, startCol = col - col % 3;
+        int startRow = row - row % 3;
+        int startCol = col - col % 3;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (board[i + startRow][j + startCol] == num) {
