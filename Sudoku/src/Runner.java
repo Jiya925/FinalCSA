@@ -3,67 +3,70 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+
 public class Runner {
-	
-	static HashMap fileBoard = new HashMap<Integer, int[][]>();
-	static int[][] b1;
-	static int[][] b2;
-	static int[][] b3;
-	static int[][] b4;
-	static int[][] b5;
-	static int[][] b6;
-	static int[][] b7;
-	static int[][] b8;
-	static int[][] b9;
+
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("run again");
-		readFile(new File("easyBoard1.txt"));
-		fileBoard.put(1, b1);
-		fileBoard.put(2, b2);
-		fileBoard.put(3, b3);
-		fileBoard.put(4, b4);
-		fileBoard.put(5, b5);
-		fileBoard.put(6, b6);
-		fileBoard.put(7, b7);
-		fileBoard.put(8, b8);
-		fileBoard.put(9, b9);
-		print(b1);
-		print(b5);
-		print(b9);
+		HashMap<Integer, int[][]> easyBoard = readFile(new File("easyBoard1.txt"));
+		HashMap<Integer, int[][]> mediumBoard = readFile(new File("mediumBoard1.txt"));
+		HashMap<Integer, int[][]> hardBoard = readFile(new File("hardBoard1.txt"));
+
+
 		
-		ComputerGenBoard c = new ComputerGenBoard(0);
+		ComputerGenBoard c = new ComputerGenBoard();
 		c.fillValues();
 		c.printSudoku();
 		
-		SolverLogic solve = new SolverLogic(fileBoard);
+		c.removespotsDigits(1);
+		c.printSudoku();
+		
+		SolverLogic solve = new SolverLogic(easyBoard);
+		
+		GUI gui = new GUI(easyBoard, mediumBoard, hardBoard);
+        gui.setVisible(true);
 
-		
-		
+
+
 
 	}
 	
-	public static void readFile(File f) {
+	public static HashMap<Integer, int[][]> readFile(File f) {
 		try {
+			HashMap<Integer, int[][]> fileBoard = new HashMap<Integer, int[][]>();
+			
 		    File file = f;
 		    Scanner s1 = new Scanner(file);
-		    b1 = make3x3(s1,0);
-		    b4 = make3x3(s1,0);
-		    b7 = make3x3(s1,0);
+		    int[][] b1 = make3x3(s1,0);
+		    int[][] b4 = make3x3(s1,0);
+		    int[][] b7 = make3x3(s1,0);
 		    Scanner s2 = new Scanner(file);
-		    b2 = make3x3(s2,3);
-		    b5 = make3x3(s2,3);
-		    b8 = make3x3(s2,3);
+		    int[][] b2 = make3x3(s2,3);
+		    int[][] b5 = make3x3(s2,3);
+		    int[][] b8 = make3x3(s2,3);
 		    Scanner s3 = new Scanner(file);
-		    b3 = make3x3(s3,6);
-		    b6 = make3x3(s3,6);
-		    b9 = make3x3(s3,6);
+		    int[][] b3 = make3x3(s3,6);
+		    int[][] b6 = make3x3(s3,6);
+		    int[][] b9 = make3x3(s3,6);
 		    
+		    fileBoard.put(1, b1);
+			fileBoard.put(2, b2);
+			fileBoard.put(3, b3);
+			fileBoard.put(4, b4);
+			fileBoard.put(5, b5);
+			fileBoard.put(6, b6);
+			fileBoard.put(7, b7);
+			fileBoard.put(8, b8);
+			fileBoard.put(9, b9);
+			
+			return fileBoard;
 		    
 		} catch (FileNotFoundException e) {
 		    System.err.println(e.getMessage());
 		}
+		return null;
 	}
 	
 	public static int[][] make3x3(Scanner scanner, int start){
@@ -86,4 +89,9 @@ public class Runner {
         }
 	}
 
+
 }
+
+
+
+
