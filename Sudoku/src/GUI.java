@@ -6,12 +6,17 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class GUI extends JFrame {
 
 	public int level;
+	private int[][] grid;
     private JTextField[][] sudokuCells;
+    private Color textColor;
     private JComboBox<String> themeCB;
+    private String selectedTheme;
     private HashMap<Integer, int[][]> fileBoard;
 
     public GUI(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB) {
@@ -27,62 +32,6 @@ public class GUI extends JFrame {
         sudokuCells = new JTextField[9][9];
         
         setBoard(sudokuPanel);
-        
-//        int[][] board = new int[9][9];
-//        
-//        //iterate through each 3x3 array in fileBoard
-//        for (Map.Entry<Integer, int[][]> entry : fileBoard.entrySet()) {
-//            int key = entry.getKey();
-//            int[][] threeByThree = entry.getValue();
-//
-//            //calculate starting row and column in the 9x9 grid based on the key
-//            int rowStart = ((key-1) / 3) * 3;
-//            int colStart = ((key-1) % 3) * 3;
-//
-//            //place the 3x3 array into the 9x9 grid at the calculated starting position
-//            for (int i = 0; i < 3; i++) {
-//                for (int j = 0; j < 3; j++) {
-//                    if (rowStart + i < 9 && colStart + j < 9) {
-//                        board[rowStart + i][colStart + j] = threeByThree[i][j];
-//                    }
-//                }
-//            }
-//        }
-//
-//        //make each subgrid have 3x3 layout and add border
-//        for(int subgridRow = 0; subgridRow < 3; subgridRow++) {
-//            for(int subgridCol = 0; subgridCol < 3; subgridCol++) {
-//                JPanel subgridPanel = new JPanel(); // panel for each 3x3
-//                subgridPanel.setLayout(new GridLayout(3, 3));
-//                subgridPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//
-//                //calculate the starting row and column index
-//                int rowStart = subgridRow * 3;
-//                int colStart = subgridCol * 3;
-//
-//                //make each spot have user input and add border within the subgrid
-//                for(int i = 0; i < 3; i++) {
-//                    for(int j = 0; j < 3; j++) {
-//                        JTextField textField = new JTextField(1);
-//                        textField.setHorizontalAlignment(JTextField.CENTER);
-//                        int rowIndex = rowStart + i;
-//                        int colIndex = colStart + j;
-//                        if(board[rowIndex][colIndex] != 0) {
-//                            //set prefilled numbers taken from board
-//                            textField.setText(String.valueOf(board[rowIndex][colIndex]));
-//                            textField.setEditable(false);
-//                        }
-//                        //filter to allow only digits
-//                        ((AbstractDocument) textField.getDocument()).setDocumentFilter(new IntFilter());
-//                        sudokuCells[rowIndex][colIndex] = textField;
-//                        subgridPanel.add(textField);
-//                        textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//                    }
-//                }
-//
-//                sudokuPanel.add(subgridPanel); // put 3x3 subgrids into 9x9 board
-//            }
-//        }
         
         JPanel topPanel = new JPanel(); //top panel
         //buttons for top
@@ -123,27 +72,33 @@ public class GUI extends JFrame {
         easyLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	//update fileBoard for easy level
                 level = 1;
-                setFileBoard(eB, mB, hB); // Update fileBoard for easy level
+                setFileBoard(eB, mB, hB);
                 setBoard(sudokuPanel);
+                setTheme();
             }
         });
 
         mediumLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	//update fileBoard for medium level
             	level = 2;
             	setFileBoard(eB, mB, hB);
             	setBoard(sudokuPanel);
+            	setTheme();
             }
         });
 
         hardLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	//update fileBoard for hard level
             	level = 3;
             	setFileBoard(eB, mB, hB);
             	setBoard(sudokuPanel);
+            	setTheme();
             }
         });
 
@@ -168,6 +123,7 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //clear guesses
+            	clear(sudokuPanel);
             }
         });
         
@@ -225,6 +181,23 @@ public class GUI extends JFrame {
                             textField.setText(String.valueOf(board[rowIndex][colIndex]));
                             textField.setEditable(false);
                         }
+                        else {
+                        	// Add document listener to capture user input and update the grid
+                            textField.getDocument().addDocumentListener(new DocumentListener() {
+                                @Override
+                                public void insertUpdate(DocumentEvent e) {
+                                    updateGrid(rowIndex, colIndex, textField);
+                                }
+                                @Override
+                                public void removeUpdate(DocumentEvent e) {
+                                    updateGrid(rowIndex, colIndex, textField);
+                                }
+                                @Override
+                                public void changedUpdate(DocumentEvent e) {
+                                    updateGrid(rowIndex, colIndex, textField);
+                                }
+                            });
+                        }
                         //filter to allow only digits
                         ((AbstractDocument) textField.getDocument()).setDocumentFilter(new IntFilter());
                         sudokuCells[rowIndex][colIndex] = textField;
@@ -273,60 +246,102 @@ public class GUI extends JFrame {
     class ThemeComboBoxListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String selectedTheme = (String) themeCB.getSelectedItem();
-            if (selectedTheme.equals("basic")) {
-                // Change border and background color for Theme 1
-                for (JTextField[] row : sudokuCells) {
-                    for (JTextField textField : row) {
-                        textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                        textField.setBackground(Color.WHITE);
-                    }
+            setTheme();
+        }
+    }
+    
+    private void setTheme() {
+    	selectedTheme = (String) themeCB.getSelectedItem();
+        if (selectedTheme.equals("basic")) {
+            // Change border and background color for Theme 1
+            for (JTextField[] row : sudokuCells) {
+                for (JTextField textField : row) {
+                    textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    textColor = Color.BLACK;
+                    textField.setBackground(Color.WHITE);
                 }
-            } else if (selectedTheme.equals("spring")) {
-                // Change border and background color for spring colors
-                for (JTextField[] row : sudokuCells) {
-                    for (JTextField textField : row) {
-                    	Color bor = new Color(131, 204, 173);
-                    	Color bac = new Color(255, 219, 237);
-                        textField.setBorder(BorderFactory.createLineBorder(bor));
-                        textField.setBackground(bac);
-                    }
+            }
+        } else if (selectedTheme.equals("spring")) {
+            // Change border and background color for spring colors
+            for (JTextField[] row : sudokuCells) {
+                for (JTextField textField : row) {
+                	Color bor = new Color(131, 204, 173);
+                	textColor = bor;
+                	Color bac = new Color(255, 219, 237);
+                    textField.setBorder(BorderFactory.createLineBorder(bor));
+                    textField.setBackground(bac);
                 }
-            } else if (selectedTheme.equals("winter")) {
-                // Change border and background color for winter colors
-                for (JTextField[] row : sudokuCells) {
-                    for (JTextField textField : row) {
-                    	Color bor = new Color(31, 88, 153);
-                    	Color bac = new Color(171, 222, 247);
-                        textField.setBorder(BorderFactory.createLineBorder(bor));
-                        textField.setBackground(bac);
-                    }
+            }
+        } else if (selectedTheme.equals("winter")) {
+            // Change border and background color for winter colors
+            for (JTextField[] row : sudokuCells) {
+                for (JTextField textField : row) {
+                	Color bor = new Color(31, 88, 153);
+                	textColor = bor;
+                	Color bac = new Color(171, 222, 247);
+                    textField.setBorder(BorderFactory.createLineBorder(bor));
+                    textField.setBackground(bac);
                 }
-            } else if (selectedTheme.equals("fall")) {
-                // Change border and background color for fall colors
-                for (JTextField[] row : sudokuCells) {
-                    for (JTextField textField : row) {
-                    	Color bor = new Color(125, 11, 11);
-                    	Color bac = new Color(236, 106, 49);
-                        textField.setBorder(BorderFactory.createLineBorder(bor));
-                        textField.setBackground(bac);
-                    }
+            }
+        } else if (selectedTheme.equals("fall")) {
+            // Change border and background color for fall colors
+            for (JTextField[] row : sudokuCells) {
+                for (JTextField textField : row) {
+                	Color bor = new Color(125, 11, 11);
+                	textColor = bor;
+                	Color bac = new Color(236, 106, 49);
+                    textField.setBorder(BorderFactory.createLineBorder(bor));
+                    textField.setBackground(bac);
                 }
-            } else if (selectedTheme.equals("summer")) {
-                // Change border and background color for summer colors
-                for (JTextField[] row : sudokuCells) {
-                    for (JTextField textField : row) {
-                    	Color bor = new Color(245, 230, 153);
-                    	Color bac = new Color(121, 248, 252);
-                        textField.setBorder(BorderFactory.createLineBorder(bor));
-                        textField.setBackground(bac);
-                    }
+            }
+        } else if (selectedTheme.equals("summer")) {
+            // Change border and background color for summer colors
+            for (JTextField[] row : sudokuCells) {
+                for (JTextField textField : row) {
+                	Color bor = new Color(245, 230, 153);
+                	textColor = bor;
+                	Color bac = new Color(121, 248, 252);
+                    textField.setBorder(BorderFactory.createLineBorder(bor));
+                    textField.setBackground(bac);
+                }
+            }
+        }
+        updateTextColors();
+    }
+    
+    // Method to update text color based on current theme
+    private void updateTextColor(JTextField textField) {
+        if (textField.isEditable()) { // Check if the text field is editable (user-inputted)
+            textField.setForeground(textColor); // Set text color for user-inputted numbers
+        } else {
+            textField.setForeground(Color.BLACK); // Set text color for pre-inputted numbers
+        }
+    }
+    
+    // Method to update text color for each text field
+    private void updateTextColors() {
+        if (sudokuCells != null) {
+            for (JTextField[] row : sudokuCells) {
+                for (JTextField textField : row) {
+                    updateTextColor(textField); // Update text color for each text field
                 }
             }
         }
     }
     
-    
+    private void clear(JPanel sudokuPanel) {
+        for (JTextField[] row : sudokuCells) {
+            for (JTextField textField : row) {
+                if (textField.isEditable()) {
+                	 System.out.println("before clearing: " + textField.getText());
+                	 textField.setText("0");
+                	 textField.updateUI();
+                	 System.out.println("after clearing: " + textField.getText());
+                }
+            }
+        }
+        sudokuPanel.repaint();
+    }
     
     public void setFileBoard(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB) {
 		if(level==1) {
@@ -339,5 +354,44 @@ public class GUI extends JFrame {
 			this.fileBoard = hB;
 		}
 	}
+    
+ // Method to update the grid with user input
+    private void updateGrid(int row, int col, JTextField textField) {
+        String text = textField.getText();
+        if (!text.isEmpty()) {
+            int value = Integer.parseInt(text);
+            grid[row][col] = value;
+        } else {
+            grid[row][col] = 0; // Reset to 0 if input is empty
+        }
+    }
+   
+    private int[][] getUserInput() {
+        int[][] userInput = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                String text = sudokuCells[i][j].getText();
+                if (!text.isEmpty()) {
+                    userInput[i][j] = Integer.parseInt(text);
+                } else {
+                    userInput[i][j] = 0;
+                }
+            }
+        }
+        return userInput;
+    }
+   
+    // Method to compare solved board with user input
+    private boolean isSolvedCorrectly(int[][] solvedBoard) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (sudokuCells[i][j].getText().isEmpty() || Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     
 }
