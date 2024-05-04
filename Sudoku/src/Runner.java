@@ -13,22 +13,11 @@ public class Runner {
 		HashMap<Integer, int[][]> easyBoard = readFile(new File("easyBoard1.txt"));
 		HashMap<Integer, int[][]> mediumBoard = readFile(new File("mediumBoard1.txt"));
 		HashMap<Integer, int[][]> hardBoard = readFile(new File("hardBoard1.txt"));
-
-
 		
-		ComputerGenBoard c = new ComputerGenBoard();
-		c.fillValues();
-		c.printSudoku();
-		
-		c.removespotsDigits(1);
-		c.printSudoku();
-		
-		SolverLogic solve = new SolverLogic(easyBoard);
+//		SolverLogic solve = new SolverLogic(easyBoard);
 		
 		GUI gui = new GUI(easyBoard, mediumBoard, hardBoard);
         gui.setVisible(true);
-
-
 
 
 	}

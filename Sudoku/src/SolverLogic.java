@@ -5,29 +5,10 @@ public class SolverLogic {
     int[][] board;
     
     //turn hashmap into a 9x9
-    public SolverLogic(HashMap<Integer, int[][]> fileBoard) {
+    public SolverLogic(int[][] userInput) {
         //initialize a new 9x9 board
-        board = new int[9][9];
-        
-        //iterate through each 3x3 array in fileBoard
-        for (Map.Entry<Integer, int[][]> entry : fileBoard.entrySet()) {
-            int key = entry.getKey();
-            int[][] threeByThree = entry.getValue();
-            
-            //calculate starting row and column in the 9x9 grid based on the key
-            int rowStart = ((key-1) / 3) * 3;
-            int colStart = ((key-1) % 3) * 3;
+        this.board = userInput;
 
-            
-            //place the 3x3 array into the 9x9 grid at the calculated starting position
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                	if (rowStart + i < 9 && colStart + j < 9) {
-                        board[rowStart + i][colStart + j] = threeByThree[i][j];
-                    }
-                }
-            }
-        }
         System.out.println("Initial Board:");
         printSudoku(board);
 

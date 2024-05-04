@@ -18,6 +18,8 @@ public class GUI extends JFrame {
     private JComboBox<String> themeCB;
     private String selectedTheme;
     private HashMap<Integer, int[][]> fileBoard;
+    private SolverLogic solver;
+
 
     public GUI(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB) {
     	fileBoard = eB;
@@ -116,6 +118,23 @@ public class GUI extends JFrame {
             	//make curr board into 9x9
             	//call solver method
             	//compare curr w solved
+            	// Retrieve user input
+                int[][] userInput = getUserInput();
+                
+                // Solve Sudoku based on user input
+                SolverLogic solver = new SolverLogic(userInput);
+                if (solver.solveSudoku(userInput, 0, 0)) {
+                    System.out.println("Sudoku solved!");
+                    // Now the solved board is in userInput
+                    // Compare userInput with the original board
+                    if (isSolvedCorrectly(userInput)) {
+                        System.out.println("Correct!");
+                    } else {
+                        System.out.println("Incorrect :(");
+                    }
+                } else {
+                    System.out.println("Sudoku puzzle could not be solved.");
+                }
             }
         });
 
