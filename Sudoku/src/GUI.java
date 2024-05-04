@@ -12,7 +12,7 @@ import javax.swing.event.DocumentListener;
 public class GUI extends JFrame {
 
 	public int level;
-	private int[][] grid;
+	private int[][] grid = new int[9][9];
     private JTextField[][] sudokuCells;
     private Color textColor;
     private JComboBox<String> themeCB;
@@ -243,7 +243,7 @@ public class GUI extends JFrame {
             	return;
             }
             //if the inserted string contains only digits (0-9)
-            if(string.matches("\\d")){
+            if(string.isEmpty() || string.matches("\\d")){
                 //call the insertString method of the superclass (DocumentFilter)
                 super.insertString(fb, offset, string, attr);
             }
@@ -255,7 +255,7 @@ public class GUI extends JFrame {
             	return;
             }
             //if the replacement text contains only digits (0-9)
-            if (text.matches("\\d")) {
+            if (text.isEmpty() || text.matches("\\d")) {
                 //call the replace method of the superclass (DocumentFilter)
                 super.replace(fb, offset, length, text, attrs);
             }
@@ -352,15 +352,19 @@ public class GUI extends JFrame {
         for (JTextField[] row : sudokuCells) {
             for (JTextField textField : row) {
                 if (textField.isEditable()) {
-                	 System.out.println("before clearing: " + textField.getText());
-                	 textField.setText("0");
-                	 textField.updateUI();
-                	 System.out.println("after clearing: " + textField.getText());
+                	 //get rid of filter that makes only ints allowed
+                     AbstractDocument doc = (AbstractDocument) textField.getDocument();
+                     doc.setDocumentFilter(null);
+                     //clear textfield
+                     textField.setText("");
+                     //put filter back
+                     doc.setDocumentFilter(new IntFilter());
                 }
             }
         }
         sudokuPanel.repaint();
     }
+
     
     public void setFileBoard(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB) {
 		if(level==1) {
