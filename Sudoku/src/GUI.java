@@ -23,6 +23,9 @@ public class GUI extends JFrame {
     private SolverLogic solver;
    	private HashMap<Integer, int[][]> rB = new HashMap<Integer, int[][]>();
    	int[][] w;
+   	
+   	SimpleAudioPlayer winnerMusic = new SimpleAudioPlayer("winnerMusic.wav", false);
+   	SimpleAudioPlayer loserMusic = new SimpleAudioPlayer("loserMusic.wav", false);
 
 
     public GUI(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB) {
@@ -76,6 +79,8 @@ public class GUI extends JFrame {
         
         currButton = easyLevelButton;
         easyLevelButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        mediumLevelButton.setBorder(null);
+        hardLevelButton.setBorder(null);
         
         //code for what happens when each button is clicked
         easyLevelButton.addActionListener(new ActionListener() {
@@ -155,11 +160,14 @@ public class GUI extends JFrame {
                     // Compare userInput with the original board
                     if (isSolvedCorrectly(userInput)) {
                         System.out.println("Correct!");
+                        winnerMusic.play();
                     } else {
                         System.out.println("Incorrect :(");
+                        loserMusic.play();
                     }
                 } else {
                     System.out.println("Sudoku puzzle could not be solved.");
+                    loserMusic.play();
                 }
             }
         });
