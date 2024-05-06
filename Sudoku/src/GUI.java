@@ -19,6 +19,8 @@ public class GUI extends JFrame {
     private String selectedTheme;
     private HashMap<Integer, int[][]> fileBoard;
     private SolverLogic solver;
+   	private HashMap<Integer, int[][]> rB = new HashMap<Integer, int[][]>();
+   	int[][] w;
 
 
     public GUI(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB) {
@@ -70,13 +72,14 @@ public class GUI extends JFrame {
         getContentPane().add(BorderLayout.NORTH, topPanel);
         getContentPane().add(BorderLayout.SOUTH, bottemPanel);
         
+        
         //code for what happens when each button is clicked
         easyLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	//update fileBoard for easy level
                 level = 1;
-                setFileBoard(eB, mB, hB);
+                setFileBoard(eB, mB, hB, rB);
                 setBoard(sudokuPanel);
                 setTheme();
             }
@@ -87,7 +90,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	//update fileBoard for medium level
             	level = 2;
-            	setFileBoard(eB, mB, hB);
+            	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
             }
@@ -98,7 +101,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	//update fileBoard for hard level
             	level = 3;
-            	setFileBoard(eB, mB, hB);
+            	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
             }
@@ -107,7 +110,17 @@ public class GUI extends JFrame {
         randomLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //generate random board
+            	//code for generating random board
+                ComputerGenBoard c = new ComputerGenBoard();
+        		c.fillValues();
+        		c.removespotsDigits(1);
+        		rB = compGen(c.getBoard(), 1, 0, 0);
+        		
+            	//update fileBoard for random level
+            	level = 0;
+            	setFileBoard(eB, mB, hB, rB);
+            	setBoard(sudokuPanel);
+            	setTheme();
             }
         });
 
@@ -306,9 +319,9 @@ public class GUI extends JFrame {
             // Change border and background color for fall colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
-                	Color bor = new Color(125, 11, 11);
+                	Color bor = new Color(188, 57, 8);
                 	textColor = bor;
-                	Color bac = new Color(236, 106, 49);
+                	Color bac = new Color(246, 170, 28);
                     textField.setBorder(BorderFactory.createLineBorder(bor));
                     textField.setBackground(bac);
                 }
@@ -317,9 +330,9 @@ public class GUI extends JFrame {
             // Change border and background color for summer colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
-                	Color bor = new Color(245, 230, 153);
+                	Color bor = new Color(61 ,165, 217);
                 	textColor = bor;
-                	Color bac = new Color(121, 248, 252);
+                	Color bac = new Color(255, 229, 124);
                     textField.setBorder(BorderFactory.createLineBorder(bor));
                     textField.setBackground(bac);
                 }
@@ -366,15 +379,18 @@ public class GUI extends JFrame {
     }
 
     
-    public void setFileBoard(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB) {
+    public void setFileBoard(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB, HashMap<Integer, int[][]> rB) {
 		if(level==1) {
 			this.fileBoard = eB;
 		}
 		else if(level==2) {
 			this.fileBoard = mB;
 		}
-		else{
+		else if(level==3) {
 			this.fileBoard = hB;
+		}
+		else{
+			this.fileBoard = rB;
 		}
 	}
     
@@ -404,7 +420,7 @@ public class GUI extends JFrame {
         return userInput;
     }
    
-    // Method to compare solved board with user input
+    //compare solved board with user input
     private boolean isSolvedCorrectly(int[][] solvedBoard) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -414,6 +430,36 @@ public class GUI extends JFrame {
             }
         }
         return true;
+    }
+ 	
+ 	//fill hashmap with comp generated board
+    public HashMap<Integer, int[][]> compGen(int[][] b, int count, int row, int col) {
+        if (count > 9) {
+            return rB;
+        }
+
+        int[][] w = new int[3][3];
+        int a = 0;
+        int q = 0;
+
+        for(int r = row; r < row + 3; r++) {
+            for (int c = col; c < col + 3; c++) {
+                w[a][q] = b[r][c];
+                q++;
+            }
+            a++;
+            q = 0;
+        }
+
+        rB.put(count, w);
+
+        if (col != 6) {
+            return compGen(b, ++count, row, col + 3);
+        } else if (row != 6) {
+            return compGen(b, ++count, row + 3, 0);
+        } else {
+            return rB;
+        }
     }
 
     

@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 public class ComputerGenBoard {
 	 int[][] board;
 	    int N; // number of cols & rows.
@@ -160,7 +164,3 @@ public class ComputerGenBoard {
 	        System.out.println();
 	    }
 }
-
-
-
-
