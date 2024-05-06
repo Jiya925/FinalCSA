@@ -11,7 +11,9 @@ import javax.swing.event.DocumentListener;
 
 public class GUI extends JFrame {
 
-	public int level;
+	private int level;
+	private boolean r;
+	private JButton currButton;
 	private int[][] grid = new int[9][9];
     private JTextField[][] sudokuCells;
     private Color textColor;
@@ -72,13 +74,20 @@ public class GUI extends JFrame {
         getContentPane().add(BorderLayout.NORTH, topPanel);
         getContentPane().add(BorderLayout.SOUTH, bottemPanel);
         
+        currButton = easyLevelButton;
+        easyLevelButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
         //code for what happens when each button is clicked
         easyLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	//change currButton
+            	currButton.setBorder(null);
+            	currButton = easyLevelButton;
+            	easyLevelButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             	//update fileBoard for easy level
                 level = 1;
+                r = false;
                 setFileBoard(eB, mB, hB, rB);
                 setBoard(sudokuPanel);
                 setTheme();
@@ -88,8 +97,13 @@ public class GUI extends JFrame {
         mediumLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	//change currButton
+            	currButton.setBorder(null);
+            	currButton = mediumLevelButton;
+            	mediumLevelButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             	//update fileBoard for medium level
             	level = 2;
+            	r = false;
             	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
@@ -99,8 +113,13 @@ public class GUI extends JFrame {
         hardLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	//change currButton
+            	currButton.setBorder(null);
+            	currButton = hardLevelButton;
+            	hardLevelButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             	//update fileBoard for hard level
             	level = 3;
+            	r = false;
             	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
@@ -109,15 +128,9 @@ public class GUI extends JFrame {
 
         randomLevelButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-            	//code for generating random board
-                ComputerGenBoard c = new ComputerGenBoard();
-        		c.fillValues();
-        		c.removespotsDigits(1);
-        		rB = compGen(c.getBoard(), 1, 0, 0);
-        		
-            	//update fileBoard for random level
-            	level = 0;
+            public void actionPerformed(ActionEvent e) {        		
+            	//update fileBoard for random board
+            	r = true;
             	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
@@ -380,18 +393,35 @@ public class GUI extends JFrame {
 
     
     public void setFileBoard(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB, HashMap<Integer, int[][]> rB) {
-		if(level==1) {
-			this.fileBoard = eB;
-		}
-		else if(level==2) {
-			this.fileBoard = mB;
-		}
-		else if(level==3) {
-			this.fileBoard = hB;
-		}
-		else{
-			this.fileBoard = rB;
-		}
+    	if(r) {
+    		ComputerGenBoard c = new ComputerGenBoard();
+    		c.fillValues();
+    		if(level==1) {
+        		c.removespotsDigits(1);
+        		rB = compGen(c.getBoard(), 1, 0, 0);
+			}
+			else if(level==2) {
+				c.removespotsDigits(2);
+        		rB = compGen(c.getBoard(), 1, 0, 0);
+			}
+			else{
+				c.removespotsDigits(3);
+        		rB = compGen(c.getBoard(), 1, 0, 0);
+			}
+    		this.fileBoard = rB;   	
+    	}
+    	else {
+	    	if(level==1) {
+				this.fileBoard = eB;
+			}
+			else if(level==2) {
+				this.fileBoard = mB;
+			}
+			else{
+				this.fileBoard = hB;
+			}
+    	}
+    	
 	}
     
  // Method to update the grid with user input
