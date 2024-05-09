@@ -287,8 +287,7 @@ public class GUI extends JFrame {
             	return;
             }
             //if the inserted string contains only digits (0-9)
-            if(string.isEmpty() || string.matches("\\d")){
-                //call the insertString method of the superclass (DocumentFilter)
+            if (fb.getDocument().getLength() + string.length() <= 1 && string.matches("\\d")) {
                 super.insertString(fb, offset, string, attr);
             }
         }
@@ -299,9 +298,9 @@ public class GUI extends JFrame {
             	return;
             }
             //if the replacement text contains only digits (0-9)
-            if (text.isEmpty() || text.matches("\\d")) {
+            if (fb.getDocument().getLength() - length + text.length() <= 1 && text.matches("\\d")) {
                 //call the replace method of the superclass (DocumentFilter)
-                super.replace(fb, offset, length, text, attrs);
+            	super.replace(fb, offset, length, text, attrs);
             }
         }
     }
