@@ -3,27 +3,28 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-
 public class Runner {
-
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("run again");
+
+		//create 3 maps from files
 		HashMap<Integer, int[][]> easyBoard = readFile(new File("easyBoard1.txt"));
 		HashMap<Integer, int[][]> mediumBoard = readFile(new File("mediumBoard1.txt"));
 		HashMap<Integer, int[][]> hardBoard = readFile(new File("hardBoard1.txt"));
 
+		//call gui class to create user interface
 		GUI gui = new GUI(easyBoard, mediumBoard, hardBoard);
         gui.setVisible(true);
 
-
 	}
 	
+	//turns file to hashmap
 	public static HashMap<Integer, int[][]> readFile(File f) {
 		try {
 			HashMap<Integer, int[][]> fileBoard = new HashMap<Integer, int[][]>();
 			
+			//create each 3x3 from file
 		    File file = f;
 		    Scanner s1 = new Scanner(file);
 		    int[][] b1 = make3x3(s1,0);
@@ -38,6 +39,7 @@ public class Runner {
 		    int[][] b6 = make3x3(s3,6);
 		    int[][] b9 = make3x3(s3,6);
 		    
+		    //add 3x3s to hashmap
 		    fileBoard.put(1, b1);
 			fileBoard.put(2, b2);
 			fileBoard.put(3, b3);
@@ -56,6 +58,7 @@ public class Runner {
 		return null;
 	}
 	
+	//creates 3x3 from file
 	public static int[][] make3x3(Scanner scanner, int start){
 		int[][] b = new int[3][3];
 		for(int i = 0; i<3&& scanner.hasNextLine(); i++) {
@@ -67,14 +70,6 @@ public class Runner {
 		return b;
 	}
 	
-	public static void print(int[][] b) {
-		for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(b[i][j] + " ");
-            }
-            System.out.println();
-        }
-	}
 
 }
 

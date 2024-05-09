@@ -82,6 +82,8 @@ public class GUI extends JFrame {
         mediumLevelButton.setBorder(null);
         hardLevelButton.setBorder(null);
         
+        setTheme();
+        
         //code for what happens when each button is clicked
         easyLevelButton.addActionListener(new ActionListener() {
             @Override
@@ -161,13 +163,21 @@ public class GUI extends JFrame {
                     if (isSolvedCorrectly(userInput)) {
                         System.out.println("Correct!");
                         winnerMusic.play();
+                        JOptionPane.showMessageDialog(GUI.this, "Correct!", "Winner", JOptionPane.INFORMATION_MESSAGE);
+                        clear(sudokuPanel);
+                        r = true;
+                    	setFileBoard(eB, mB, hB, rB);
+                    	setBoard(sudokuPanel);
+                    	setTheme();
                     } else {
                         System.out.println("Incorrect :(");
                         loserMusic.play();
+                        JOptionPane.showMessageDialog(GUI.this, "Incorrect :(", "Try Again", JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
                     System.out.println("Sudoku puzzle could not be solved.");
                     loserMusic.play();
+                    JOptionPane.showMessageDialog(GUI.this, "Incorrect :(", "Try Again", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -310,7 +320,7 @@ public class GUI extends JFrame {
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                     textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                    textColor = Color.BLACK;
+                    textColor = new Color(177, 123, 222);
                     textField.setBackground(Color.WHITE);
                 }
             }
