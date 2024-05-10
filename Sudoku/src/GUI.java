@@ -479,27 +479,34 @@ public class GUI extends JFrame {
         return true;
     }
  	
- 	//fill hashmap with comp generated board
+ 	//fill hashmap with comp generated board recursively 
     public HashMap<Integer, int[][]> compGen(int[][] b, int count, int row, int col) {
+    	//updates count so it doesn't run forever
         if (count > 9) {
             return rB;
         }
-
+        
+        // make variables
         int[][] w = new int[3][3];
         int a = 0;
         int q = 0;
 
+        //runs and updates w (3x3 square) with corresponding values from board
         for(int r = row; r < row + 3; r++) {
             for (int c = col; c < col + 3; c++) {
                 w[a][q] = b[r][c];
                 q++;
             }
+            //update variables
             a++;
             q = 0;
         }
-
+        
+        //put the 3x3 array into the hashMap
         rB.put(count, w);
 
+        //recursively returns the values based on where they are in overall board 
+        //fills in from left to right then goes down a block 
         if (col != 6) {
             return compGen(b, ++count, row, col + 3);
         } else if (row != 6) {
