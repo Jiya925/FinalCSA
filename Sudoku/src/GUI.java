@@ -327,7 +327,7 @@ public class GUI extends JFrame {
             // Change border and background color for spring colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
-                	Color bor = new Color(131, 204, 173);
+                	Color bor = new Color(133, 178, 130);
                 	textColor = bor;
                 	Color bac = new Color(255, 219, 237);
                     textField.setBorder(BorderFactory.createLineBorder(bor));
