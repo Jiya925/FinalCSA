@@ -3,7 +3,6 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.DocumentEvent;
@@ -11,6 +10,7 @@ import javax.swing.event.DocumentListener;
 
 public class GUI extends JFrame {
 
+	//all variables
 	private int level;
 	private boolean r;
 	private JButton currButton;
@@ -20,7 +20,6 @@ public class GUI extends JFrame {
     private JComboBox<String> themeCB;
     private String selectedTheme;
     private HashMap<Integer, int[][]> fileBoard;
-    private SolverLogic solver;
    	private HashMap<Integer, int[][]> rB = new HashMap<Integer, int[][]>();
    	int[][] w;
    	
@@ -77,6 +76,7 @@ public class GUI extends JFrame {
         getContentPane().add(BorderLayout.NORTH, topPanel);
         getContentPane().add(BorderLayout.SOUTH, bottemPanel);
         
+        //set currButton
         currButton = easyLevelButton;
         easyLevelButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         mediumLevelButton.setBorder(null);
@@ -195,7 +195,7 @@ public class GUI extends JFrame {
     }
     
     public void setBoard(JPanel sudokuPanel) {
-    	// Clear existing board
+    	//clear existing board
         sudokuPanel.removeAll();
         sudokuPanel.revalidate();
         sudokuPanel.repaint();
@@ -315,7 +315,7 @@ public class GUI extends JFrame {
     private void setTheme() {
     	selectedTheme = (String) themeCB.getSelectedItem();
         if (selectedTheme.equals("basic")) {
-            // Change border and background color for Theme 1
+            //change border, background, and text color for Theme 1
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                     textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -324,7 +324,7 @@ public class GUI extends JFrame {
                 }
             }
         } else if (selectedTheme.equals("spring")) {
-            // Change border and background color for spring colors
+            //change border, background, and text color for spring colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                 	Color bor = new Color(133, 178, 130);
@@ -335,7 +335,7 @@ public class GUI extends JFrame {
                 }
             }
         } else if (selectedTheme.equals("winter")) {
-            // Change border and background color for winter colors
+            //change border, background, and text color for winter colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                 	Color bor = new Color(31, 88, 153);
@@ -346,7 +346,7 @@ public class GUI extends JFrame {
                 }
             }
         } else if (selectedTheme.equals("fall")) {
-            // Change border and background color for fall colors
+            //change border, background, and text color for fall colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                 	Color bor = new Color(188, 57, 8);
@@ -357,7 +357,7 @@ public class GUI extends JFrame {
                 }
             }
         } else if (selectedTheme.equals("summer")) {
-            // Change border and background color for summer colors
+            //change border, background, and text color for summer colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                 	Color bor = new Color(61 ,165, 217);
@@ -371,7 +371,7 @@ public class GUI extends JFrame {
         updateTextColors();
     }
     
-    // Method to update text color based on current theme
+    //update text color based on current theme
     private void updateTextColor(JTextField textField) {
         if (textField.isEditable()) { // Check if the text field is editable (user-inputted)
             textField.setForeground(textColor); // Set text color for user-inputted numbers
@@ -380,7 +380,7 @@ public class GUI extends JFrame {
         }
     }
     
-    // Method to update text color for each text field
+    //update text color for each text field
     private void updateTextColors() {
         if (sudokuCells != null) {
             for (JTextField[] row : sudokuCells) {
@@ -391,6 +391,7 @@ public class GUI extends JFrame {
         }
     }
     
+    //clear each user inputted guess
     private void clear(JPanel sudokuPanel) {
         for (JTextField[] row : sudokuCells) {
             for (JTextField textField : row) {
@@ -408,7 +409,7 @@ public class GUI extends JFrame {
         sudokuPanel.repaint();
     }
 
-    
+    //change the board
     public void setFileBoard(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB, HashMap<Integer, int[][]> rB) {
     	if(r) {
     		ComputerGenBoard c = new ComputerGenBoard();
@@ -441,7 +442,7 @@ public class GUI extends JFrame {
     	
 	}
     
- // Method to update the grid with user input
+    //update the grid with user input
     private void updateGrid(int row, int col, JTextField textField) {
         String text = textField.getText();
         if (!text.isEmpty()) {
