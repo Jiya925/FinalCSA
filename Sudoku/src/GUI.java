@@ -270,6 +270,7 @@ public class GUI extends JFrame {
             		//updates grid 
             		grid[row][col] = solvedBoard[row][col];
             		sudokuCells[row][col].setText("" + solvedBoard[row][col]);
+            		sudokuCells[row][col].setFont(sudokuCells[row][col].getFont().deriveFont(Font.BOLD));
             	}
             }            
         });
