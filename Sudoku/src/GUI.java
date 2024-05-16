@@ -208,7 +208,7 @@ public class GUI extends JFrame {
             	int row = (int)(Math.random()*9);
             	int col = (int)(Math.random()*9);
             	//check if the box is not empty then run until finds an empty box 
-            	if (!(sudokuCells[row][col].getText().isEmpty())) {
+            	if (!(sudokuCells[row][col].getText().isEmpty()) && !oneLeft()) {
             		while (!(sudokuCells[row][col].getText().isEmpty())) {
             			row = (int)(Math.random()*9);
             			col = (int)(Math.random()*9);
@@ -506,6 +506,24 @@ public class GUI extends JFrame {
             }
         }
         return true;
+    }
+    
+    //checks if there is only one empty textfield left (used for hint button)
+    private boolean oneLeft() {
+    	int left = 0;
+    	for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+            	if(sudokuCells[i][j].getText().isEmpty()) {
+            		left++;
+            	}
+            }
+    	}
+    	if(left==1) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
  	
  	//fill hashMap with computer generated board recursively 
