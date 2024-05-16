@@ -107,6 +107,11 @@ public class GUI extends JFrame {
                 setFileBoard(eB, mB, hB, rB);
                 setBoard(sudokuPanel);
                 setTheme();
+                //calls solver to created solvedBoard
+                int[][] userInput = getUserInput();
+                SolverLogic solver = new SolverLogic(userInput);
+                solver.solveSudoku(userInput, 0, 0);
+                isSolvedCorrectly(userInput);
             }
         });
 
@@ -123,6 +128,11 @@ public class GUI extends JFrame {
             	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
+            	//calls solver to created solvedBoard
+                int[][] userInput = getUserInput();
+                SolverLogic solver = new SolverLogic(userInput);
+                solver.solveSudoku(userInput, 0, 0);
+                isSolvedCorrectly(userInput);
             }
         });
 
@@ -139,6 +149,11 @@ public class GUI extends JFrame {
             	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
+            	//calls solver to created solvedBoard
+                int[][] userInput = getUserInput();
+                SolverLogic solver = new SolverLogic(userInput);
+                solver.solveSudoku(userInput, 0, 0);
+                isSolvedCorrectly(userInput);
             }
         });
 
@@ -167,7 +182,7 @@ public class GUI extends JFrame {
             	//compare curr w solved
             	// Retrieve user input
                 int[][] userInput = getUserInput();
-                
+               
                 // Solve Sudoku based on user input
                 SolverLogic solver = new SolverLogic(userInput);
                 if (solver.solveSudoku(userInput, 0, 0)) {
@@ -183,15 +198,49 @@ public class GUI extends JFrame {
                     	setFileBoard(eB, mB, hB, rB);
                     	setBoard(sudokuPanel);
                     	setTheme();
+                    	//calls solver to created solvedBoard
+                        userInput = getUserInput();
+                        solver = new SolverLogic(userInput);
+                        solver.solveSudoku(userInput, 0, 0);
+                        isSolvedCorrectly(userInput);
                     } else {
                         System.out.println("Incorrect :(");
                         loserMusic.play();
                         JOptionPane.showMessageDialog(GUI.this, "Incorrect :(", "Try Again", JOptionPane.WARNING_MESSAGE);
+                        for (int i = 0; i < 9; i++) {
+                            for (int j = 0; j < 9; j++) {
+                                if (sudokuCells[i][j].isEditable()) {
+                                    if (!sudokuCells[i][j].getText().isEmpty() && Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
+                                        sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.BOLD | Font.ITALIC));
+                                        sudokuCells[i][j].setForeground(Color.RED);
+                                    } else {
+                                        sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.PLAIN));
+                                        setTColor();
+                                        sudokuCells[i][j].setForeground(textColor);
+                                    }
+                                }
+                            }
+                        }
                     }
                 } else {
                     System.out.println("Sudoku puzzle could not be solved.");
                     loserMusic.play();
                     JOptionPane.showMessageDialog(GUI.this, "Incorrect :(", "Try Again", JOptionPane.ERROR_MESSAGE);
+                    //highlight incorrect cells in bold
+                    for (int i = 0; i < 9; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            if (sudokuCells[i][j].isEditable()) {
+                                if (!sudokuCells[i][j].getText().isEmpty() && Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
+                                    sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.BOLD | Font.ITALIC));
+                                    sudokuCells[i][j].setForeground(Color.RED);
+                                } else {
+                                    sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.PLAIN));
+                                    setTColor();
+                                    sudokuCells[i][j].setForeground(textColor);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -343,6 +392,21 @@ public class GUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             setTheme();
         }
+    }
+    
+    private void setTColor() {
+    	if (selectedTheme.equals("basic")) {
+    		textColor = new Color(177, 123, 222);
+    	} else if (selectedTheme.equals("spring")) {
+    		textColor = new Color(133, 178, 130);
+    	} else if (selectedTheme.equals("winter")) {
+    		textColor = new Color(31, 88, 153);
+    	} else if (selectedTheme.equals("fall")) {
+    		textColor = new Color(188, 57, 8);
+    	}
+    	else if (selectedTheme.equals("summer")) {
+    		textColor = new Color(61 ,165, 217);
+    	}
     }
     
     private void setTheme() {
@@ -523,7 +587,7 @@ public class GUI extends JFrame {
             	}
             }
     	}
-    	if(left==1) {
+    	if(left==3) {
     		return true;
     	}
     	else {
