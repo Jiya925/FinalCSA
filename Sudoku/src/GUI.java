@@ -11,6 +11,7 @@ import javax.swing.event.DocumentListener;
 
 public class GUI extends JFrame {
 
+	//all variables
 	private int level;
 	private boolean r;
 	private JButton currButton;
@@ -21,7 +22,6 @@ public class GUI extends JFrame {
     private JComboBox<String> themeCB;
     private String selectedTheme;
     private HashMap<Integer, int[][]> fileBoard;
-    private SolverLogic solver;
    	private HashMap<Integer, int[][]> rB = new HashMap<Integer, int[][]>();
    	int[][] w;
    	
@@ -210,9 +210,11 @@ public class GUI extends JFrame {
                         for (int i = 0; i < 9; i++) {
                             for (int j = 0; j < 9; j++) {
                                 if (sudokuCells[i][j].isEditable()) {
+                                	//if wrong
                                     if (!sudokuCells[i][j].getText().isEmpty() && Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
                                         sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.BOLD | Font.ITALIC));
                                         sudokuCells[i][j].setForeground(Color.RED);
+                                    //if right
                                     } else {
                                         sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.PLAIN));
                                         setTColor();
@@ -230,9 +232,11 @@ public class GUI extends JFrame {
                     for (int i = 0; i < 9; i++) {
                         for (int j = 0; j < 9; j++) {
                             if (sudokuCells[i][j].isEditable()) {
+                            	//if wrong
                                 if (!sudokuCells[i][j].getText().isEmpty() && Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
                                     sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.BOLD | Font.ITALIC));
                                     sudokuCells[i][j].setForeground(Color.RED);
+                                //if right
                                 } else {
                                     sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.PLAIN));
                                     setTColor();
@@ -269,6 +273,7 @@ public class GUI extends JFrame {
             		}
             		//updates grid 
             		grid[row][col] = solvedBoard[row][col];
+            		//update cell to right answer and bold
             		sudokuCells[row][col].setText("" + solvedBoard[row][col]);
             		sudokuCells[row][col].setFont(sudokuCells[row][col].getFont().deriveFont(Font.BOLD));
             	}
@@ -395,6 +400,7 @@ public class GUI extends JFrame {
         }
     }
     
+    //sets textColor to right color based on theme
     private void setTColor() {
     	if (selectedTheme.equals("basic")) {
     		textColor = new Color(177, 123, 222);
@@ -410,6 +416,7 @@ public class GUI extends JFrame {
     	}
     }
     
+    //sets board theme based on selected theme
     private void setTheme() {
     	selectedTheme = (String) themeCB.getSelectedItem();
         if (selectedTheme.equals("basic")) {
@@ -469,7 +476,7 @@ public class GUI extends JFrame {
         updateTextColors();
     }
     
-    // Method to update text color based on current theme
+    //updates text color of textfield based on current theme
     private void updateTextColor(JTextField textField) {
         if (textField.isEditable()) { // Check if the text field is editable (user-inputted)
             textField.setForeground(textColor); // Set text color for user-inputted numbers
@@ -478,7 +485,7 @@ public class GUI extends JFrame {
         }
     }
     
-    // Method to update text color for each text field
+    //updates text color for each text field
     private void updateTextColors() {
         if (sudokuCells != null) {
             for (JTextField[] row : sudokuCells) {
@@ -489,6 +496,7 @@ public class GUI extends JFrame {
         }
     }
     
+    //clears all user inputted values
     private void clear(JPanel sudokuPanel) {
         for (JTextField[] row : sudokuCells) {
             for (JTextField textField : row) {
@@ -506,7 +514,7 @@ public class GUI extends JFrame {
         sudokuPanel.repaint();
     }
 
-    
+    //change board based on file
     public void setFileBoard(HashMap<Integer, int[][]> eB, HashMap<Integer, int[][]> mB, HashMap<Integer, int[][]> hB, HashMap<Integer, int[][]> rB) {
     	if(r) {
     		ComputerGenBoard c = new ComputerGenBoard();
@@ -539,7 +547,7 @@ public class GUI extends JFrame {
     	
 	}
     
- // Method to update the grid with user input
+ //updates the grid with user input
     private void updateGrid(int row, int col, JTextField textField) {
         String text = textField.getText();
         if (!text.isEmpty()) {
@@ -550,6 +558,7 @@ public class GUI extends JFrame {
         }
     }
    
+    //gets values from board
     private int[][] getUserInput() {
         int[][] userInput = new int[9][9];
         for (int i = 0; i < 9; i++) {
