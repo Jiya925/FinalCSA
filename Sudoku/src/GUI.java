@@ -87,7 +87,11 @@ public class GUI extends JFrame {
         
         setTheme();
         
-        isSolvedCorrectly(getUserInput());
+        //calls solver to created solvedBoard
+        int[][] userInput = getUserInput();
+        SolverLogic solver = new SolverLogic(userInput);
+        solver.solveSudoku(userInput, 0, 0);
+        isSolvedCorrectly(userInput);
         
         //code for what happens when each button is clicked
         easyLevelButton.addActionListener(new ActionListener() {
