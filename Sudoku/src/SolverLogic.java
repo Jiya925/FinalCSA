@@ -5,7 +5,7 @@ import java.util.Map;
 public class SolverLogic {
     private int[][] board;
     private int[][] solvedBoard;
-    private static int[][] initialSolvedBoard = null;
+    public static int[][] initialSolvedBoard = null;
 
     
     //turn hashmap into a 9x9

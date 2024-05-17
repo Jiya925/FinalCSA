@@ -113,6 +113,7 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
+                SolverLogic.initialSolvedBoard = null;
             }
         });
 
@@ -134,6 +135,8 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
+                SolverLogic.initialSolvedBoard = null;
+
             }
         });
 
@@ -155,6 +158,8 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
+                SolverLogic.initialSolvedBoard = null;
+
             }
         });
 
@@ -171,6 +176,8 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
+                SolverLogic.initialSolvedBoard = null;
+
             }
         });
 
