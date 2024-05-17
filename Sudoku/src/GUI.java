@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.DocumentEvent;
@@ -185,7 +186,7 @@ public class GUI extends JFrame {
                
                 // Solve Sudoku based on user input
                 SolverLogic solver = new SolverLogic(userInput);
-                if (solver.solveSudoku(userInput, 0, 0)) {
+                if (isSolvedCorrectly(userInput) && Arrays.deepEquals(userInput, SolverLogic.getInitialSolvedBoard())) {
                     System.out.println("Sudoku solved!");
                     // Now the solved board is in userInput
                     // Compare userInput with the original board

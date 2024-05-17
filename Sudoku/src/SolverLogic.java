@@ -1,10 +1,12 @@
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SolverLogic {
-    int[][] board;
-    int num = 0;
-    int[][] og;
+    private int[][] board;
+    private int[][] solvedBoard;
+    private static int[][] initialSolvedBoard = null;
+
     
     //turn hashmap into a 9x9
     public SolverLogic(int[][] userInput) {
@@ -16,21 +18,27 @@ public class SolverLogic {
 
         System.out.println("Solving...");
         
-        //olve the sudoku
+        //solve the sudoku
         if (solveSudoku(board, 0, 0)) {
             System.out.println("Sudoku solved!");
-        } 
+            this.solvedBoard = new int[9][9];
+            for (int i = 0; i < 9; i++) {
+                this.solvedBoard[i] = Arrays.copyOf(board[i], 9);
+            }
+            // Save the initially solved board if not already saved
+            if (initialSolvedBoard == null) {
+                initialSolvedBoard = new int[9][9];
+                for (int i = 0; i < 9; i++) {
+                    initialSolvedBoard[i] = Arrays.copyOf(solvedBoard[i], 9);
+                }
+            }
+        }
         else {
             System.out.println("Sudoku puzzle could not be solved.");
         }
 
         System.out.println("Filled Board:");
-        printSudoku(board);
-        
-        if(num == 0) {
-        	og = printSudoku(board);
-        	num++;
-        }
+        printSudoku(board); 
     }
 
 
@@ -39,7 +47,6 @@ public class SolverLogic {
     public boolean solveSudoku(int[][] board, int row, int col) {
     	//filled board
         if (row == 9) {
-        	num--;
             return true;
         }
 
@@ -105,4 +112,14 @@ public class SolverLogic {
     	}
         return true;
 	}
+    
+    // Method to get the solved board
+    public int[][] getSolvedBoard() {
+        return solvedBoard;
+    }
+
+    // Static method to get the initial solved board
+    public static int[][] getInitialSolvedBoard() {
+        return initialSolvedBoard;
+    }
 }
