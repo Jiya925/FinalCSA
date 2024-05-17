@@ -13,7 +13,7 @@ public class GUI extends JFrame {
 
 	//all variables
 	private int level;
-	private boolean r;
+	private boolean r; 
 	private JButton currButton;
 	private int[][] solvedBoard = new int[9][9];
 	private int[][] grid = new int[9][9];

@@ -3,6 +3,8 @@ import java.util.Map;
 
 public class SolverLogic {
     int[][] board;
+    int num = 0;
+    int[][] og;
     
     //turn hashmap into a 9x9
     public SolverLogic(int[][] userInput) {
@@ -24,6 +26,11 @@ public class SolverLogic {
 
         System.out.println("Filled Board:");
         printSudoku(board);
+        
+        if(num == 0) {
+        	og = printSudoku(board);
+        	num++;
+        }
     }
 
 
@@ -32,6 +39,7 @@ public class SolverLogic {
     public boolean solveSudoku(int[][] board, int row, int col) {
     	//filled board
         if (row == 9) {
+        	num--;
             return true;
         }
 
