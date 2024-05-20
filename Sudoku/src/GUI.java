@@ -95,10 +95,7 @@ public class GUI extends JFrame {
         SolverLogic solver = new SolverLogic(userInput);
         solver.solveSudoku(userInput, 0, 0);
         isSolvedCorrectly(userInput);
-        if (initialBoard == null) {
-            // Retrieve user input and save it as the initial board state
-            initialBoard = getUserInput();
-        }
+        initialBoard = getUserInput();
         
         //code for what happens when each button is clicked
         easyLevelButton.addActionListener(new ActionListener() {
@@ -119,10 +116,7 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
-                if (initialBoard == null) {
-                    // Retrieve user input and save it as the initial board state
-                    initialBoard = getUserInput();
-                }
+                initialBoard = getUserInput();
             }
         });
 
@@ -144,10 +138,7 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
-                if (initialBoard == null) {
-                    // Retrieve user input and save it as the initial board state
-                    initialBoard = getUserInput();
-                }
+                initialBoard = getUserInput();
             }
         });
 
@@ -169,10 +160,7 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
-                if (initialBoard == null) {
-                    // Retrieve user input and save it as the initial board state
-                    initialBoard = getUserInput();
-                }
+                initialBoard = getUserInput();
             }
         });
 
@@ -189,10 +177,7 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
-                if (initialBoard == null) {
-                    // Retrieve user input and save it as the initial board state
-                    initialBoard = getUserInput();
-                }
+                initialBoard = getUserInput();
             }
         });
 
@@ -200,6 +185,7 @@ public class GUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+            	System.out.println("Before:");
 
                 // Create a solver instance with the initial board state
                 SolverLogic solver = new SolverLogic(initialBoard);
@@ -220,7 +206,6 @@ public class GUI extends JFrame {
                     setFileBoard(eB, mB, hB, rB);
                     setBoard(sudokuPanel);
                     setTheme();
-                    initialBoard = null;  // Reset the initial board for the next round
                 } else {
                     System.out.println("Incorrect :(");
                     loserMusic.play();
@@ -246,6 +231,8 @@ public class GUI extends JFrame {
                 }
             }
         });
+        
+        
 
 
         clearButton.addActionListener(new ActionListener() {
@@ -280,6 +267,7 @@ public class GUI extends JFrame {
         });
         
     }
+    
     
     public void setBoard(JPanel sudokuPanel) {
     	// Clear existing board
