@@ -1,82 +1,69 @@
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SolverLogic {
     private int[][] board;
     private int[][] solvedBoard;
-    public static int[][] initialSolvedBoard = null;
 
-    
-    //turn hashmap into a 9x9
     public SolverLogic(int[][] userInput) {
-        //initialize a new 9x9 board
-        this.board = userInput;
+        // Initialize a new 9x9 board with a deep copy of userInput
+        this.board = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            this.board[i] = Arrays.copyOf(userInput[i], 9);
+        }
 
         System.out.println("Initial Board:");
-        printSudoku(board);
+        printSudoku(this.board);
 
         System.out.println("Solving...");
-        
-        //solve the sudoku
-        if (solveSudoku(board, 0, 0)) {
+
+        // Solve the Sudoku
+        if (solveSudoku(this.board, 0, 0)) {
             System.out.println("Sudoku solved!");
             this.solvedBoard = new int[9][9];
             for (int i = 0; i < 9; i++) {
-                this.solvedBoard[i] = Arrays.copyOf(board[i], 9);
+                this.solvedBoard[i] = Arrays.copyOf(this.board[i], 9);
             }
-            // Save the initially solved board if not already saved
-            if (initialSolvedBoard == null) {
-                initialSolvedBoard = new int[9][9];
-                for (int i = 0; i < 9; i++) {
-                    initialSolvedBoard[i] = Arrays.copyOf(solvedBoard[i], 9);
-                }
-            }
-        }
-        else {
+        } else {
             System.out.println("Sudoku puzzle could not be solved.");
         }
 
         System.out.println("Filled Board:");
-        printSudoku(board); 
+        printSudoku(this.board);
     }
 
-
-
-    //backtracking algorithm
+    // Backtracking algorithm
     public boolean solveSudoku(int[][] board, int row, int col) {
-    	//filled board
+        // Filled board
         if (row == 9) {
             return true;
         }
 
-        //if we have reached the end of a row, move to the next row
+        // If we have reached the end of a row, move to the next row
         if (col == 9) {
             return solveSudoku(board, row + 1, 0);
         }
-        //if the cell is already filled, move to the next cell
+
+        // If the cell is already filled, move to the next cell
         if (board[row][col] != 0) {
             return solveSudoku(board, row, col + 1);
         }
 
         for (int num = 1; num <= 9; num++) {
             if (isValid(board, row, col, num)) {
-                //if the number is valid, place it in the cell
+                // If the number is valid, place it in the cell
                 board[row][col] = num;
-                //recursively solve for the next cell
+                // Recursively solve for the next cell
                 if (solveSudoku(board, row, col + 1)) {
                     return true;
                 }
-                //if the solution fails, backtrack and try the next number
+                // If the solution fails, backtrack and try the next number
                 board[row][col] = 0;
             }
         }
         return false;
     }
 
-
-    
-    //print filled board
+    // Print filled board
     private void printSudoku(int[][] board) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -86,21 +73,20 @@ public class SolverLogic {
         }
     }
 
-    
     public boolean isValid(int[][] board, int row, int col, int num) {
-        //check if num is already present in the row/column/subgrid
-    	for (int x = 0; x <= 8; x++) {
+        // Check if num is already present in the row/column/subgrid
+        for (int x = 0; x <= 8; x++) {
             if (board[row][x] == num) {
                 return false;
             }
-    	}
- 
+        }
+
         for (int y = 0; y <= 8; y++) {
             if (board[y][col] == num) {
                 return false;
             }
         }
- 
+
         int startRow = row - row % 3;
         int startCol = col - col % 3;
         for (int i = 0; i < 3; i++) {
@@ -108,18 +94,13 @@ public class SolverLogic {
                 if (board[i + startRow][j + startCol] == num) {
                     return false;
                 }
-    		}
-    	}
+            }
+        }
         return true;
-	}
-    
+    }
+
     // Method to get the solved board
     public int[][] getSolvedBoard() {
         return solvedBoard;
-    }
-
-    // Static method to get the initial solved board
-    public static int[][] getInitialSolvedBoard() {
-        return initialSolvedBoard;
     }
 }

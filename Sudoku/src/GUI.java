@@ -18,6 +18,7 @@ public class GUI extends JFrame {
 	private JButton currButton;
 	private int[][] solvedBoard = new int[9][9];
 	private int[][] grid = new int[9][9];
+	private int[][] finalS = new int[9][9];
     private JTextField[][] sudokuCells;
     private Color textColor;
     private JComboBox<String> themeCB;
@@ -25,6 +26,7 @@ public class GUI extends JFrame {
     private HashMap<Integer, int[][]> fileBoard;
    	private HashMap<Integer, int[][]> rB = new HashMap<Integer, int[][]>();
    	int[][] w;
+    private int[][] initialBoard;
    	
    	SimpleAudioPlayer winnerMusic = new SimpleAudioPlayer("winnerMusic.wav", false);
    	SimpleAudioPlayer loserMusic = new SimpleAudioPlayer("loserMusic.wav", false);
@@ -93,6 +95,10 @@ public class GUI extends JFrame {
         SolverLogic solver = new SolverLogic(userInput);
         solver.solveSudoku(userInput, 0, 0);
         isSolvedCorrectly(userInput);
+        if (initialBoard == null) {
+            // Retrieve user input and save it as the initial board state
+            initialBoard = getUserInput();
+        }
         
         //code for what happens when each button is clicked
         easyLevelButton.addActionListener(new ActionListener() {
@@ -113,7 +119,10 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
-                SolverLogic.initialSolvedBoard = null;
+                if (initialBoard == null) {
+                    // Retrieve user input and save it as the initial board state
+                    initialBoard = getUserInput();
+                }
             }
         });
 
@@ -135,8 +144,10 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
-                SolverLogic.initialSolvedBoard = null;
-
+                if (initialBoard == null) {
+                    // Retrieve user input and save it as the initial board state
+                    initialBoard = getUserInput();
+                }
             }
         });
 
@@ -158,8 +169,10 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
-                SolverLogic.initialSolvedBoard = null;
-
+                if (initialBoard == null) {
+                    // Retrieve user input and save it as the initial board state
+                    initialBoard = getUserInput();
+                }
             }
         });
 
@@ -176,86 +189,64 @@ public class GUI extends JFrame {
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
                 isSolvedCorrectly(userInput);
-                SolverLogic.initialSolvedBoard = null;
-
+                if (initialBoard == null) {
+                    // Retrieve user input and save it as the initial board state
+                    initialBoard = getUserInput();
+                }
             }
         });
 
         checkButton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                //check answer
-            	//make curr board into 9x9
-            	//call solver method
-            	//compare curr w solved
-            	// Retrieve user input
-                int[][] userInput = getUserInput();
-               
-                // Solve Sudoku based on user input
-                SolverLogic solver = new SolverLogic(userInput);
-                if (isSolvedCorrectly(userInput) && Arrays.deepEquals(userInput, SolverLogic.getInitialSolvedBoard())) {
+
+                // Create a solver instance with the initial board state
+                SolverLogic solver = new SolverLogic(initialBoard);
+
+                // Retrieve the solved board for this specific initial board
+                int[][] solvedBoard = solver.getSolvedBoard();
+
+                // Get the current user input
+                int[][] currentUserInput = getUserInput();
+
+                // Compare the current user input with the solved board
+                if (Arrays.deepEquals(currentUserInput, solvedBoard)) {
                     System.out.println("Sudoku solved!");
-                    // Now the solved board is in userInput
-                    // Compare userInput with the original board
-                    if (isSolvedCorrectly(userInput)) {
-                        System.out.println("Correct!");
-                        winnerMusic.play();
-                        JOptionPane.showMessageDialog(GUI.this, "Correct!", "Winner", JOptionPane.INFORMATION_MESSAGE);
-                        clear(sudokuPanel);
-                        r = true;
-                    	setFileBoard(eB, mB, hB, rB);
-                    	setBoard(sudokuPanel);
-                    	setTheme();
-                    	//calls solver to created solvedBoard
-                        userInput = getUserInput();
-                        solver = new SolverLogic(userInput);
-                        solver.solveSudoku(userInput, 0, 0);
-                        isSolvedCorrectly(userInput);
-                    } else {
-                        System.out.println("Incorrect :(");
-                        loserMusic.play();
-                        JOptionPane.showMessageDialog(GUI.this, "Incorrect :(", "Try Again", JOptionPane.WARNING_MESSAGE);
-                        for (int i = 0; i < 9; i++) {
-                            for (int j = 0; j < 9; j++) {
-                                if (sudokuCells[i][j].isEditable()) {
-                                	//if wrong
-                                    if (!sudokuCells[i][j].getText().isEmpty() && Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
-                                        sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.BOLD | Font.ITALIC));
-                                        sudokuCells[i][j].setForeground(Color.RED);
-                                    //if right
-                                    } else {
-                                        sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.PLAIN));
-                                        setTColor();
-                                        sudokuCells[i][j].setForeground(textColor);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    winnerMusic.play();
+                    JOptionPane.showMessageDialog(GUI.this, "Correct!", "Winner", JOptionPane.INFORMATION_MESSAGE);
+                    clear(sudokuPanel);
+                    r = true;
+                    setFileBoard(eB, mB, hB, rB);
+                    setBoard(sudokuPanel);
+                    setTheme();
+                    initialBoard = null;  // Reset the initial board for the next round
                 } else {
-                    System.out.println("Sudoku puzzle could not be solved.");
+                    System.out.println("Incorrect :(");
                     loserMusic.play();
-                    JOptionPane.showMessageDialog(GUI.this, "Incorrect :(", "Try Again", JOptionPane.ERROR_MESSAGE);
-                    //highlight incorrect cells in bold
-                    for (int i = 0; i < 9; i++) {
-                        for (int j = 0; j < 9; j++) {
-                            if (sudokuCells[i][j].isEditable()) {
-                            	//if wrong
-                                if (!sudokuCells[i][j].getText().isEmpty() && Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
-                                    sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.BOLD | Font.ITALIC));
-                                    sudokuCells[i][j].setForeground(Color.RED);
-                                //if right
-                                } else {
-                                    sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.PLAIN));
-                                    setTColor();
-                                    sudokuCells[i][j].setForeground(textColor);
-                                }
+                    JOptionPane.showMessageDialog(GUI.this, "Incorrect :(", "Try Again", JOptionPane.WARNING_MESSAGE);
+                    highlightErrors(currentUserInput, solvedBoard);
+                }
+            }
+
+            private void highlightErrors(int[][] userInput, int[][] solvedBoard) {
+                for (int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        if (sudokuCells[i][j].isEditable()) {
+                            if (!sudokuCells[i][j].getText().isEmpty() && Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
+                                sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.BOLD | Font.ITALIC));
+                                sudokuCells[i][j].setForeground(Color.RED);
+                            } else {
+                                sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.PLAIN));
+                                setTColor();
+                                sudokuCells[i][j].setForeground(textColor);
                             }
                         }
                     }
                 }
             }
         });
+
 
         clearButton.addActionListener(new ActionListener() {
             @Override
@@ -605,7 +596,7 @@ public class GUI extends JFrame {
             	}
             }
     	}
-    	if(left==3) {
+    	if(left<=3) {
     		return true;
     	}
     	else {
