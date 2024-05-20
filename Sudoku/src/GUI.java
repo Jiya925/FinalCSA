@@ -206,6 +206,12 @@ public class GUI extends JFrame {
                     setFileBoard(eB, mB, hB, rB);
                     setBoard(sudokuPanel);
                     setTheme();
+                    //calls solver to created solvedBoard
+                    int[][] userInput = getUserInput();
+                    solver = new SolverLogic(userInput);
+                    solver.solveSudoku(userInput, 0, 0);
+                    isSolvedCorrectly(userInput);
+                    initialBoard = getUserInput();
                 } else {
                     System.out.println("Incorrect :(");
                     loserMusic.play();
