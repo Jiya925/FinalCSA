@@ -90,7 +90,7 @@ public class GUI extends JFrame {
         
         setTheme();
         
-        //calls solver to created solvedBoard
+        //resets new and solved board
         int[][] userInput = getUserInput();
         SolverLogic solver = new SolverLogic(userInput);
         solver.solveSudoku(userInput, 0, 0);
@@ -111,7 +111,7 @@ public class GUI extends JFrame {
                 setFileBoard(eB, mB, hB, rB);
                 setBoard(sudokuPanel);
                 setTheme();
-                //calls solver to created solvedBoard
+                //resets new and solved board
                 int[][] userInput = getUserInput();
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
@@ -133,7 +133,7 @@ public class GUI extends JFrame {
             	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
-            	//calls solver to created solvedBoard
+            	//resets new and solved board
                 int[][] userInput = getUserInput();
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
@@ -155,7 +155,7 @@ public class GUI extends JFrame {
             	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
-            	//calls solver to created solvedBoard
+            	//resets new and solved board
                 int[][] userInput = getUserInput();
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
@@ -172,7 +172,7 @@ public class GUI extends JFrame {
             	setFileBoard(eB, mB, hB, rB);
             	setBoard(sudokuPanel);
             	setTheme();
-            	//calls solver to created solvedBoard
+            	//resets new and solved board
                 int[][] userInput = getUserInput();
                 SolverLogic solver = new SolverLogic(userInput);
                 solver.solveSudoku(userInput, 0, 0);
@@ -185,19 +185,13 @@ public class GUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-            	System.out.println("Before:");
 
-                // Create a solver instance with the initial board state
                 SolverLogic solver = new SolverLogic(initialBoard);
-
-                // Retrieve the solved board for this specific initial board
                 int[][] solvedBoard = solver.getSolvedBoard();
-
-                // Get the current user input
                 int[][] currentUserInput = getUserInput();
 
-                // Compare the current user input with the solved board
-                if (Arrays.deepEquals(currentUserInput, solvedBoard)) {
+                //compare the current user input with the solved board
+                if (Arrays.deepEquals(currentUserInput, solvedBoard)) { //if right
                     System.out.println("Sudoku solved!");
                     winnerMusic.play();
                     JOptionPane.showMessageDialog(GUI.this, "Correct!", "Winner", JOptionPane.INFORMATION_MESSAGE);
@@ -206,13 +200,13 @@ public class GUI extends JFrame {
                     setFileBoard(eB, mB, hB, rB);
                     setBoard(sudokuPanel);
                     setTheme();
-                    //calls solver to created solvedBoard
+                    //resets new and solved board
                     int[][] userInput = getUserInput();
                     solver = new SolverLogic(userInput);
                     solver.solveSudoku(userInput, 0, 0);
                     isSolvedCorrectly(userInput);
                     initialBoard = getUserInput();
-                } else {
+                } else { //if wrong
                     System.out.println("Incorrect :(");
                     loserMusic.play();
                     JOptionPane.showMessageDialog(GUI.this, "Incorrect :(", "Try Again", JOptionPane.WARNING_MESSAGE);
@@ -220,10 +214,13 @@ public class GUI extends JFrame {
                 }
             }
 
+            //turn wrong answer red
             private void highlightErrors(int[][] userInput, int[][] solvedBoard) {
+            	//go thru board
                 for (int i = 0; i < 9; i++) {
                     for (int j = 0; j < 9; j++) {
-                        if (sudokuCells[i][j].isEditable()) {
+                        if (sudokuCells[i][j].isEditable()) { //if user inputted
+                        	//if not empty and not right
                             if (!sudokuCells[i][j].getText().isEmpty() && Integer.parseInt(sudokuCells[i][j].getText()) != solvedBoard[i][j]) {
                                 sudokuCells[i][j].setFont(sudokuCells[i][j].getFont().deriveFont(Font.BOLD | Font.ITALIC));
                                 sudokuCells[i][j].setForeground(Color.RED);
@@ -238,9 +235,8 @@ public class GUI extends JFrame {
             }
         });
         
-        
 
-
+        //clear board
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -249,8 +245,7 @@ public class GUI extends JFrame {
             }
         });
         
-        //need to figure out how to add just one spot --> go through code maybe 
-        //understand how it all works.  
+        //hint function
         hintButton.addActionListener(new ActionListener() {
             @Override
             //fills in a random square which is empty and fills it with the number that goes in that spot
@@ -276,7 +271,7 @@ public class GUI extends JFrame {
     
     
     public void setBoard(JPanel sudokuPanel) {
-    	// Clear existing board
+    	//clear existing board
         sudokuPanel.removeAll();
         sudokuPanel.revalidate();
         sudokuPanel.repaint();
@@ -326,7 +321,7 @@ public class GUI extends JFrame {
                             textField.setEditable(false);
                         }
                         else {
-                        	// Add document listener to capture user input and update the grid
+                        	//add document listener to get user input and update the grid
                             textField.getDocument().addDocumentListener(new DocumentListener() {
                                 @Override
                                 public void insertUpdate(DocumentEvent e) {
@@ -413,7 +408,7 @@ public class GUI extends JFrame {
     private void setTheme() {
     	selectedTheme = (String) themeCB.getSelectedItem();
         if (selectedTheme.equals("basic")) {
-            // Change border and background color for Theme 1
+            //change border and background color for Theme 1
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                     textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -422,7 +417,7 @@ public class GUI extends JFrame {
                 }
             }
         } else if (selectedTheme.equals("spring")) {
-            // Change border and background color for spring colors
+            //change border and background color for spring colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                 	Color bor = new Color(133, 178, 130);
@@ -433,7 +428,7 @@ public class GUI extends JFrame {
                 }
             }
         } else if (selectedTheme.equals("winter")) {
-            // Change border and background color for winter colors
+            //change border and background color for winter colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                 	Color bor = new Color(31, 88, 153);
@@ -444,7 +439,7 @@ public class GUI extends JFrame {
                 }
             }
         } else if (selectedTheme.equals("fall")) {
-            // Change border and background color for fall colors
+            //change border and background color for fall colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                 	Color bor = new Color(188, 57, 8);
@@ -455,7 +450,7 @@ public class GUI extends JFrame {
                 }
             }
         } else if (selectedTheme.equals("summer")) {
-            // Change border and background color for summer colors
+            //change border and background color for summer colors
             for (JTextField[] row : sudokuCells) {
                 for (JTextField textField : row) {
                 	Color bor = new Color(61 ,165, 217);
@@ -540,7 +535,7 @@ public class GUI extends JFrame {
     	
 	}
     
- //updates the grid with user input
+    //updates the grid with user input
     private void updateGrid(int row, int col, JTextField textField) {
         String text = textField.getText();
         if (!text.isEmpty()) {
